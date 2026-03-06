@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCell | Smartphones Revisados</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#000;
+}
+header{
+  background:#fff;
+  text-align:center;
+  padding:20px;
+  font-size:28px;
+  font-weight:bold;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+}
+header img{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+}
+.aviso{
+  background:#e1e1e1;
+  color:#000;
+  text-align:center;
+  padding:12px;
+  font-size:14px;
+  border-bottom:3px solid #25D366;
+}
+.descricao{
+  text-align:center;
+  max-width:850px;
+  margin:30px auto;
+  padding:20px;
+  background:#eafaea;
+  border-radius:12px;
+  font-size:16px;
+  color:#333;
+  line-height:1.6;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+.produtos{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+}
+.produto{
+  background:#fff;
+  border-radius:15px;
+  padding:15px;
+  text-align:center;
+  transition:0.3s;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.produto:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+.produto img{
+  width:100%;
+  border-radius:12px;
+  transition:0.3s;
+}
+.produto h3{
+  margin:10px 0 5px 0;
+}
+.btns{
+  margin:10px 0;
+}
+.btn{
+  padding:8px 14px;
+  margin:3px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:#fff;
+  color:#000;
+  font-weight:bold;
+  transition:0.2s;
+}
+.btn.ativo{
+  background:#25D366;
+  color:#fff;
+}
+.whatsapp-btn{
+  margin-top:10px;
+  background:#25D366;
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  color:white;
+  width:100%;
+  transition:0.3s;
+}
+.whatsapp-btn:hover{
+  transform:scale(1.05);
+}
+.whatsapp-float{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#25D366;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+footer{
+  text-align:center;
+  padding:20px;
+  color:#777;
+  margin-top:40px;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="novacell-logo.png" alt="NovaCell">
+  NovaCell
+</header>
+
+<div class="aviso">🚚 Entregas disponíveis somente para Fortaleza - Ceará</div>
+
+<div class="descricao">
+Somos a <strong>NovaCell</strong>, especializados em celulares <strong>iOS e Android</strong> seminovos, revisados e com garantia. Entregamos exclusivamente para <strong>Fortaleza e região – Ceará</strong>. Qualidade, proteção e confiança para você comprar com segurança.
+</div>
+
+<div class="container">
+  <h2 style="text-align:center; margin-bottom:20px;">iPhones Revisados</h2>
+  <div class="produtos" id="produtos"></div>
+</div>
+
+<footer>NovaCell © 2026 • Smartphones revisados e testados</footer>
+
+<div class="whatsapp-float" onclick="suporte()">💬</div>
+
+<script>
+// MODELOS
+const phones = [
+  {model:"7", versions:["Normal","Plus"], imgs:{Normal:"iphone7.png",Plus:"img/iphone7plus.png"}},
+  {model:"8", versions:["Normal","Plus"], imgs:{Normal:"iphone8.png",Plus:"img/iphone8plus.png"}},
+  {model:"XR", versions:["Normal"], imgs:{Normal:"iphonexr.png"}},
+  {model:"11", versions:["Normal","Pro"], imgs:{Normal:"iphone11.png",Pro:"iphone11pro.png"}},
+  {model:"12", versions:["Normal","Pro"], imgs:{Normal:"iphone12.png",Pro:"iphone12pro.png"}},
+  {model:"13", versions:["Normal","Pro"], imgs:{Normal:"iphone13.png",Pro:"iphone13pro.png"}},
+  {model:"14", versions:["Normal","Pro"], imgs:{Normal:"iphone14.png",Pro:"iphone14pro.png"}},
+  {model:"15", versions:["Normal","Pro"], imgs:{Normal:"iphone15.png",Pro:"iphone15pro.png"}},
+  {model:"16", versions:["Normal","Pro"], imgs:{Normal:"iphone16.png",Pro:"iphone16pro.png"}}
+];
+
+const produtosContainer = document.getElementById("produtos");
+let state = {};
+let btnSelecionado = null;
+
+// CRIA CARDS
+phones.forEach(p=>{
+  state[p.model] = p.versions[0];
+  const card = document.createElement("div");
+  card.className = "produto";
+  card.innerHTML = `
+    <img id="img-${p.model}" src="${p.imgs[p.versions[0]]}">
+    <h3>iPhone ${p.model}</h3>
+    <div class="btns">
+      ${p.versions.map(v=>`<button class="btn" id="${p.model}-${v}" onclick="selecionarBtn('${p.model}','${v}')">${v}</button>`).join("")}
+    </div>
+    <button class="whatsapp-btn" onclick="comprar('${p.model}')">Consultar no WhatsApp</button>
+  `;
+  produtosContainer.appendChild(card);
+});
+
+// FUNÇÕES
+function selecionarBtn(model,version){
+  if(btnSelecionado) btnSelecionado.classList.remove("ativo");
+  const btn = document.getElementById(model+"-"+version);
+  btn.classList.add("ativo");
+  btnSelecionado = btn;
+  state[model] = version;
+  // muda a imagem
+  const img = document.getElementById("img-"+model);
+  img.src = phones.find(p=>p.model===model).imgs[version];
+}
+
+function comprar(model){
+  let version = state[model];
+  let msg = `Olá, vim pelo site da NovaCell e tenho interesse no iPhone ${model} ${version}.`;
+  window.open(`https://wa.me/4391725251?text=${encodeURIComponent(msg)}`);
+}
+
+function suporte(){
+  let msg = "Olá Nova Cell, tenho algumas dúvidas.";
+  window.open(`https://wa.me/4391725251?text=${encodeURIComponent(msg)}`);
+}
+</script>
+
+</body>
+</html>
